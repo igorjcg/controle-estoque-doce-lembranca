@@ -1,23 +1,23 @@
-# Controle de Estoque Doce Lembranca
+# Controle de Estoque Doce Lembrança
 
-Sistema web para controle de estoque e apoio ao processo de producao de doces, desenvolvido com Yii2. O projeto centraliza o cadastro de ingredientes, movimentacoes de entrada e saida, receitas e producao baseada em consumo de estoque, permitindo uma operacao mais organizada e rastreavel.
+Sistema web para controle de estoque e apoio ao processo de produção de doces, desenvolvido com Yii2. O projeto centraliza o cadastro de ingredientes, movimentações de entrada e saída, receitas e produção baseada em consumo de estoque, permitindo uma operação mais organizada e rastreável.
 
-## Descricao do Sistema
+## Descrição do Sistema
 
-O **Controle de Estoque Doce Lembranca** foi criado para apoiar o gerenciamento dos insumos utilizados na producao de doces. O sistema permite acompanhar o saldo de ingredientes com base nas movimentacoes registradas, cadastrar receitas com seus componentes e realizar producoes que consomem automaticamente os itens do estoque.
+O **Controle de Estoque Doce Lembrança** foi criado para apoiar o gerenciamento dos insumos utilizados na produção de doces. O sistema permite acompanhar o saldo de ingredientes com base nas movimentações registradas, cadastrar receitas com seus componentes e realizar produções que consomem automaticamente os itens do estoque.
 
-O objetivo principal e reduzir erros operacionais, melhorar o controle dos custos e dar visibilidade sobre itens com estoque abaixo do minimo.
+O objetivo principal é reduzir erros operacionais, melhorar o controle dos custos e dar visibilidade sobre itens com estoque abaixo do mínimo.
 
 ## Funcionalidades
 
 - Cadastro de ingredientes
 - Controle de estoque por ingrediente
-- Registro de movimentacoes de entrada
-- Registro de movimentacoes de saida
+- Registro de movimentações de entrada
+- Registro de movimentações de saída
 - Cadastro de receitas
-- Vinculo de ingredientes por receita
-- Registro de producao com base em receita
-- Baixa automatica de estoque durante a producao
+- Vínculo de ingredientes por receita
+- Registro de produção com base em receita
+- Baixa automática de estoque durante a produção
 - Alerta de estoque baixo
 - Listagens com filtros de apoio operacional
 
@@ -32,17 +32,17 @@ O objetivo principal e reduzir erros operacionais, melhorar o controle dos custo
 ## Estrutura do Projeto
 
 ```text
-assets/                 Recursos e definicoes de assets
+assets/                 Recursos e definições de assets
 commands/               Comandos de console
-config/                 Configuracoes da aplicacao
-controllers/            Controllers da aplicacao web
+config/                 Configurações da aplicação
+controllers/            Controllers da aplicação web
 mail/                   Views de e-mail
-models/                 Models e regras de negocio
-runtime/                Arquivos gerados em execucao
+models/                 Models e regras de negócio
+runtime/                Arquivos gerados em execução
 tests/                  Testes automatizados
-views/                  Views da aplicacao
-web/                    Entry point e recursos publicos
-vendor/                 Dependencias do Composer
+views/                  Views da aplicação
+web/                    Entry point e recursos públicos
+vendor/                 Dependências do Composer
 ```
 
 ## Como Instalar Localmente
@@ -54,7 +54,7 @@ git clone <url-do-repositorio>
 cd controleDeEstoqueDoceLembranca
 ```
 
-### 2. Instalar dependencias
+### 2. Instalar dependências
 
 ```bash
 composer install
@@ -67,10 +67,10 @@ Certifique-se de que o ambiente possui:
 - PHP 7.4 ou superior
 - Composer
 - MySQL
-- Extensoes PHP necessarias para Yii2
+- Extensões PHP necessárias para Yii2
 - Servidor local, como XAMPP, WAMP ou o servidor embutido do PHP
 
-## Configuracao do Banco de Dados
+## Configuração do Banco de Dados
 
 Crie o banco de dados no MySQL, por exemplo:
 
@@ -90,7 +90,7 @@ return [
 ];
 ```
 
-Se estiver usando XAMPP com MySQL local, revise usuario, senha e porta conforme o seu ambiente.
+Se estiver usando XAMPP com MySQL local, revise usuário, senha e porta conforme o seu ambiente.
 
 ## Executar Migrations
 
@@ -108,7 +108,7 @@ yii.bat migrate
 
 ## Executar o Projeto
 
-Voce pode executar o projeto de diferentes formas.
+Você pode executar o projeto de diferentes formas.
 
 ### Usando o servidor embutido do PHP
 
@@ -116,7 +116,7 @@ Voce pode executar o projeto de diferentes formas.
 php yii serve
 ```
 
-A aplicacao ficara disponivel em:
+A aplicação ficará disponível em:
 
 ```text
 http://localhost:8080
@@ -132,6 +132,6 @@ Exemplo:
 http://localhost/controleDeEstoqueDoceLembranca/web
 ```
 
-## Licenca
+## Licença
 
-Este projeto utiliza como base o ecossistema Yii2 e segue o licenciamento definido pelos componentes e dependencias utilizados. Caso este repositorio faca parte de um projeto interno ou academico, ajuste esta secao conforme a politica de uso adotada.
+Este projeto utiliza como base o ecossistema Yii2 e segue o licenciamento definido pelos componentes e dependências utilizados. Caso este repositório faça parte de um projeto interno ou acadêmico, ajuste esta seção conforme a política de uso adotada.

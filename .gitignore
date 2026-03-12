@@ -1,61 +1,86 @@
-# =========================
+############################
 # IDE
-# =========================
-.idea
-.vscode
-nbproject
+############################
+.idea/
+.vscode/
+nbproject/
 .buildpath
 .project
-.settings
+.settings/
 
-# =========================
-# OS
-# =========================
-Thumbs.db
+############################
+# OS files
+############################
 .DS_Store
+Thumbs.db
 
-# =========================
+############################
 # Composer
-# =========================
-/vendor
+############################
+/vendor/
 composer.phar
 
-# =========================
-# PHPUnit
-# =========================
+############################
+# Environment
+############################
+.env
+.env.local
+
+############################
+# Logs
+############################
+*.log
+
+############################
+# Yii runtime (gerado automaticamente)
+############################
+/runtime/*
+!/runtime/.gitignore
+
+############################
+# Assets compilados (gerados automaticamente)
+############################
+/web/assets/*
+!/web/assets/.gitignore
+
+############################
+# PHPUnit / Codeception
+############################
 phpunit.phar
 /phpunit.xml
 tests/_output/*
 tests/_support/_generated
 
-# =========================
+############################
 # Vagrant
-# =========================
-/.vagrant
+############################
+.vagrant/
 
-# =========================
-# Yii runtime (gerado automaticamente)
-# =========================
-/runtime/*
-!/runtime/.gitignore
+############################
+# Node (caso use futuramente)
+############################
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# =========================
-# Assets compilados
-# =========================
-/web/assets/*
-
-# =========================
-# Logs
-# =========================
-*.log
-
-# =========================
-# Environment configs
-# =========================
-.env
-
-# =========================
+############################
 # Dumps de banco
-# =========================
-database_dump.sql
+############################
 *.sql
+*.dump
+*.bak
+database_dump.sql
+
+############################
+# Arquivos temporários
+############################
+*.tmp
+*.temp
+*.swp
+*.swo
+
+############################
+# Uploads locais (se existir)
+############################
+web/uploads/*
