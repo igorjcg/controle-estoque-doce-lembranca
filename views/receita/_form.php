@@ -91,7 +91,8 @@ $unidadeOptions = Html::renderSelectOptions(null, $unidades);
 </template>
 
 <?php
-$this->registerJsFile('@web/views/receita/js/_form.js.php', [
+$jsUrl = Yii::$app->assetManager->publish('@app/views/receita/js/_form.js.php')[1];
+$this->registerJsFile($jsUrl, [
     'depends' => [\yii\web\JqueryAsset::class],
 ]);
 ?>

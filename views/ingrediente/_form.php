@@ -49,7 +49,8 @@ $unidadesSiglas = ArrayHelper::map($unidadesList, 'id', 'sigla');
     <?php ActiveForm::end(); ?>
 </div>
 <?php
-$this->registerJsFile('@web/views/ingrediente/js/_form.js.php', [
+$jsUrl = Yii::$app->assetManager->publish('@app/views/ingrediente/js/_form.js.php')[1];
+$this->registerJsFile($jsUrl, [
     'depends' => [\yii\web\JqueryAsset::class],
 ]);
 ?>

@@ -42,7 +42,8 @@ $this->title = 'Unidades de Medida';
 </div>
 
 <?php
-$this->registerJsFile('@web/views/unidade-medida/js/index.js.php', [
+$jsUrl = Yii::$app->assetManager->publish('@app/views/unidade-medida/js/index.js.php')[1];
+$this->registerJsFile($jsUrl, [
     'depends' => [\yii\web\JqueryAsset::class],
 ]);
 ?>

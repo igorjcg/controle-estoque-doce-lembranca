@@ -64,7 +64,8 @@ $this->title = 'Ingredientes com Estoque Baixo';
 </div>
 
 <?php
-$this->registerJsFile('@web/views/ingrediente/js/estoque-baixo.js.php', [
+$jsUrl = Yii::$app->assetManager->publish('@app/views/ingrediente/js/estoque-baixo.js.php')[1];
+$this->registerJsFile($jsUrl, [
     'depends' => [\yii\web\JqueryAsset::class],
 ]);
 ?>

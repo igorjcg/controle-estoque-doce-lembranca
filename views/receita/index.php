@@ -54,7 +54,8 @@ $this->title = 'Receitas';
 </div>
 
 <?php
-$this->registerJsFile('@web/views/receita/js/index.js.php', [
+$jsUrl = Yii::$app->assetManager->publish('@app/views/receita/js/index.js.php')[1];
+$this->registerJsFile($jsUrl, [
     'depends' => [\yii\web\JqueryAsset::class],
 ]);
 ?>

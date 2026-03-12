@@ -79,7 +79,8 @@ $this->title = 'Histórico de Movimentações';
 </div>
 
 <?php
-$this->registerJsFile('@web/views/movimentacao-estoque/js/historico.js.php', [
+$jsUrl = Yii::$app->assetManager->publish('@app/views/movimentacao-estoque/js/historico.js.php')[1];
+$this->registerJsFile($jsUrl, [
     'depends' => [\yii\web\JqueryAsset::class],
 ]);
 ?>
