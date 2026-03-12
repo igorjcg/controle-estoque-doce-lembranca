@@ -31,18 +31,26 @@ O objetivo principal é reduzir erros operacionais, melhorar o controle dos cust
 
 ## Estrutura do Projeto
 
+### Diretórios versionados
+
 ```text
-assets/                 Recursos e definições de assets
-commands/               Comandos de console
+commands/               Comandos de console da aplicação
 config/                 Configurações da aplicação
 controllers/            Controllers da aplicação web
 mail/                   Views de e-mail
 models/                 Models e regras de negócio
-runtime/                Arquivos gerados em execução
-tests/                  Testes automatizados
 views/                  Views da aplicação
-web/                    Entry point e recursos públicos
-vendor/                 Dependências do Composer
+web/                    Entry point da aplicação e recursos públicos versionados
+```
+
+### Diretórios gerados automaticamente
+
+Os diretórios abaixo não fazem parte da estrutura versionada do repositório e são criados conforme o ambiente local, instalação de dependências ou execução da aplicação:
+
+```text
+runtime/                Arquivos temporários e dados gerados em execução
+web/assets/             Assets publicados automaticamente pelo Yii2
+vendor/                 Dependências instaladas pelo Composer
 ```
 
 ## Como Instalar Localmente
@@ -78,7 +86,7 @@ Crie o banco de dados no MySQL, por exemplo:
 CREATE DATABASE doce_lembranca CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ```
 
-Depois, ajuste o arquivo [config/db.php](/c:/dev/Codex/controleDeEstoqueDoceLembranca/config/db.php) com as credenciais locais:
+Depois, ajuste o arquivo `config/db.php` com as credenciais locais:
 
 ```php
 return [
