@@ -2,14 +2,19 @@
 
 namespace app\controllers;
 
+use app\common\util\UnidadeUtil;
+use app\models\Ingrediente;
+use app\models\MovimentacaoEstoque;
 use Yii;
 use app\models\Receita;
 use app\models\ReceitaIngrediente;
 use yii\data\ActiveDataProvider;
 use yii\db\Exception;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 class ReceitaController extends Controller
 {
@@ -23,6 +28,13 @@ class ReceitaController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['post'],
+                    'utilizar' => ['post'],
                 ],
             ],
         ];
@@ -41,6 +53,100 @@ class ReceitaController extends Controller
         return $this->render('index', [
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionUtilizar($id = null, $quantidade = null)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $id = $id ?? Yii::$app->request->post('id');
+        $quantidade = $quantidade ?? Yii::$app->request->post('quantidade');
+
+        $quantidadeProduzida = (float) $quantidade;
+        if ($quantidadeProduzida <= 0) {
+            return [
+                'success' => false,
+                'message' => 'Informe uma quantidade válida',
+            ];
+        }
+
+        $receita = $this->findModel((int) $id);
+        $itensReceita = ReceitaIngrediente::find()
+            ->where(['receita_id' => $receita->id])
+            ->with(['ingrediente.unidadeMedida', 'unidadeMedida'])
+            ->all();
+
+        if ($itensReceita === []) {
+            return [
+                'success' => false,
+                'message' => 'A receita não possui ingredientes cadastrados.',
+            ];
+        }
+
+        $movimentacoes = [];
+        foreach ($itensReceita as $item) {
+            $ingrediente = $item->ingrediente;
+            $unidadeOrigem = $item->unidadeMedida;
+            $unidadeBaseIngrediente = $ingrediente?->unidadeMedida;
+
+            if ($ingrediente === null || $unidadeOrigem === null || $unidadeBaseIngrediente === null) {
+                return [
+                    'success' => false,
+                    'message' => 'Ingrediente ou unidade de medida inválidos na receita.',
+                ];
+            }
+
+            $quantidadeNecessaria = (float) $item->quantidade * $quantidadeProduzida;
+            $quantidadeEmBase = UnidadeUtil::converterParaBase(
+                $quantidadeNecessaria,
+                $unidadeOrigem,
+                $unidadeBaseIngrediente
+            );
+
+            if ($ingrediente->getEstoqueAtual() < $quantidadeEmBase) {
+                return [
+                    'success' => false,
+                    'message' => "Estoque insuficiente para o ingrediente {$ingrediente->nome}.",
+                ];
+            }
+
+            $movimentacoes[] = [
+                'ingrediente' => $ingrediente,
+                'quantidade' => $quantidadeEmBase,
+            ];
+        }
+
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            foreach ($movimentacoes as $item) {
+                /** @var Ingrediente $ingrediente */
+                $ingrediente = $item['ingrediente'];
+                $movimentacao = new MovimentacaoEstoque();
+                $movimentacao->ingrediente_id = $ingrediente->id;
+                $movimentacao->tipo_movimento = 'saida';
+                $movimentacao->quantidade = $item['quantidade'];
+                $movimentacao->valor_unitario = (string) $ingrediente->custo_medio;
+                $movimentacao->observacao = "Baixa automática ao utilizar a receita: {$receita->nome}";
+
+                if (!$movimentacao->save()) {
+                    throw new Exception("Falha ao registrar movimentação do ingrediente {$ingrediente->nome}.");
+                }
+            }
+
+            $transaction->commit();
+
+            return [
+                'success' => true,
+                'message' => 'Produção registrada com sucesso.',
+            ];
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+
+            return [
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
     }
 
     /**

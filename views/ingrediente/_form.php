@@ -29,7 +29,7 @@ $unidadesSiglas = ArrayHelper::map($unidadesList, 'id', 'sigla');
     <div class="row">
         <div class="col-md-6">
             <?php
-            $labelEstoqueMin = 'Estoque minimo para alerta';
+            $labelEstoqueMin = 'Estoque mínimo para alerta';
             if (isset($model->unidadeMedida) && $model->unidadeMedida) {
                 $labelEstoqueMin .= ' (em ' . Html::encode($model->unidadeMedida->sigla) . ')';
             }

@@ -1,7 +1,9 @@
 <?php
 
+use yii\widgets\Pjax;
 use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
@@ -23,6 +25,7 @@ $this->title = 'Receitas';
         </div>
     </div>
 
+    <?php Pjax::begin(['id' => 'pjax-receitas']); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'tableOptions' => ['class' => 'table table-striped table-bordered', 'id' => 'tabela-receitas'],
@@ -37,23 +40,36 @@ $this->title = 'Receitas';
                 },
             ],
             [
-                'header' => 'Ingredientes',
-                'class' => yii\grid\ActionColumn::class,
-                'template' => '{view}',
-                'headerOptions' => ['style' => 'width:80px'],
+                'label' => 'Utilizar',
+                'format' => 'raw',
+                'value' => static function ($model) {
+                    return Html::button('Utilizar', [
+                        'type' => 'button',
+                        'class' => 'btn btn-sm btn-primary btn-utilizar-receita',
+                        'data-id' => $model->id,
+                        'data-nome' => $model->nome,
+                        'data-url' => Url::to(['receita/utilizar']),
+                    ]);
+                },
+                'headerOptions' => ['style' => 'width:110px'],
                 'contentOptions' => ['style' => 'text-align:center'],
             ],
             [
                 'class' => yii\grid\ActionColumn::class,
-                'template' => '{update} {delete}',
+                'template' => '{view} {update} {delete}',
                 'headerOptions' => ['style' => 'width:80px'],
                 'contentOptions' => ['style' => 'text-align:center'],
             ]
         ],
     ]) ?>
+    <?php Pjax::end(); ?>
 </div>
 
 <?php
+$this->registerCssFile('https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css');
+$this->registerJsFile('https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js', [
+    'depends' => [\yii\web\JqueryAsset::class],
+]);
 $jsUrl = Yii::$app->assetManager->publish('@app/views/receita/js/index.js.php')[1];
 $this->registerJsFile($jsUrl, [
     'depends' => [\yii\web\JqueryAsset::class],
