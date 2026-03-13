@@ -19,26 +19,26 @@ $ingredientes = ArrayHelper::map(
     <?php $form = ActiveForm::begin(); ?>
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
             <?= $form->field($model, 'ingrediente_id')->dropDownList($ingredientes, ['prompt' => 'Selecione']) ?>
         </div>
-        <div class="col-md-2">
+        <div class="col-12 col-sm-6 col-md-2">
             <?= $form->field($model, 'quantidade')->textInput(['type' => 'number', 'step' => '0.001'])
                 ->hint('Sempre na unidade base do ingrediente.') ?>
         </div>
-        <div class="col-md-3">
+        <div class="col-12 col-sm-6 col-md-3">
             <?= $form->field($model, 'valor_unitario')->textInput(['type' => 'number', 'step' => '0.0001']) ?>
         </div>
-        <div class="col-md-3">
+        <div class="col-12 col-md-3">
             <?= $form->field($model, 'valor_total')->textInput(['type' => 'number', 'step' => '0.0001']) ?>
         </div>
     </div>
 
     <?= $form->field($model, 'observacao')->textarea(['rows' => 3]) ?>
 
-    <div class="form-group mt-3">
-        <?= Html::submitButton('Salvar', ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Historico', ['historico'], ['class' => 'btn btn-secondary']) ?>
+    <div class="form-group mt-3 page-actions">
+        <?= Html::submitButton('Salvar', ['class' => 'btn btn-primary btn-responsive']) ?>
+        <?= Html::a('Historico', ['historico'], ['class' => 'btn btn-secondary btn-responsive']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

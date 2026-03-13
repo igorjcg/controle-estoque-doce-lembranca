@@ -12,11 +12,11 @@ $this->title = 'Ingredientes';
 ?>
 
 <div class="ingrediente-index">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <h1 class="mb-0"><?= Html::encode($this->title) ?></h1>
-        <div class="d-flex gap-2">
-            <?= Html::a('Estoque Baixo', ['estoque-baixo'], ['class' => 'btn btn-outline-warning']) ?>
-            <?= Html::a('Novo Ingrediente', ['create'], ['class' => 'btn btn-success']) ?>
+        <div class="page-actions">
+            <?= Html::a('Estoque Baixo', ['estoque-baixo'], ['class' => 'btn btn-outline-warning btn-responsive']) ?>
+            <?= Html::a('Novo Ingrediente', ['create'], ['class' => 'btn btn-success btn-responsive']) ?>
         </div>
     </div>
     <div class="card border-0 shadow-sm mb-3">
@@ -27,6 +27,7 @@ $this->title = 'Ingredientes';
         </div>
     </div>
 
+    <div class="table-responsive">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'tableOptions' => ['class' => 'table table-striped table-bordered', 'id' => 'tabela-ingredientes'],
@@ -72,6 +73,7 @@ $this->title = 'Ingredientes';
             ],
         ],
     ]) ?>
+    </div>
 </div>
 
 <?php

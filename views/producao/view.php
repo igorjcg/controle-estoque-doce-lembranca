@@ -11,12 +11,12 @@ $this->title = 'Produção #' . $model->id;
 ?>
 
 <div class="producao-view">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <h1 class="mb-0"><?= Html::encode($this->title) ?></h1>
-        <div class="d-flex gap-2">
-            <?= Html::a('Atualizar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <div class="page-actions">
+            <?= Html::a('Atualizar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary btn-responsive']) ?>
             <?= Html::a('Excluir', ['delete', 'id' => $model->id], [
-                'class' => 'btn btn-danger',
+                'class' => 'btn btn-danger btn-responsive',
                 'data' => [
                     'confirm' => 'Tem certeza que deseja excluir este item?',
                     'method' => 'post',

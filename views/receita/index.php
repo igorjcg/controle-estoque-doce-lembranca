@@ -12,7 +12,7 @@ $this->title = 'Receitas';
 
 $this->registerCss("
 .swal2-popup .swal-input-quantidade {
-    width: 90px !important;
+    width: min(100%, 90px) !important;
     margin: 0 auto;
     text-align: center;
     font-weight: 600;
@@ -21,9 +21,9 @@ $this->registerCss("
 ?>
 
 <div class="receita-index">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <h1 class="mb-0"><?= Html::encode($this->title) ?></h1>
-        <?= Html::a('Nova Receita', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Nova Receita', ['create'], ['class' => 'btn btn-success btn-responsive']) ?>
     </div>
 
     <div class="card border-0 shadow-sm mb-3">
@@ -35,6 +35,7 @@ $this->registerCss("
     </div>
 
     <?php Pjax::begin(['id' => 'pjax-receitas']); ?>
+    <div class="table-responsive">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'tableOptions' => ['class' => 'table table-striped table-bordered', 'id' => 'tabela-receitas'],
@@ -60,17 +61,18 @@ $this->registerCss("
                         'data-url' => Url::to(['receita/utilizar']),
                     ]);
                 },
-                'headerOptions' => ['style' => 'width:110px'],
-                'contentOptions' => ['style' => 'text-align:center'],
+                'headerOptions' => ['class' => 'text-center', 'style' => 'min-width:110px'],
+                'contentOptions' => ['class' => 'text-center'],
             ],
             [
                 'class' => yii\grid\ActionColumn::class,
                 'template' => '{view} {update} {delete}',
-                'headerOptions' => ['style' => 'width:80px'],
-                'contentOptions' => ['style' => 'text-align:center'],
+                'headerOptions' => ['class' => 'text-center', 'style' => 'min-width:80px'],
+                'contentOptions' => ['class' => 'text-center'],
             ]
         ],
     ]) ?>
+    </div>
     <?php Pjax::end(); ?>
 </div>
 
