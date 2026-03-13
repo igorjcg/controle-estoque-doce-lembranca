@@ -21,7 +21,7 @@ $this->title = 'Controle de Estoque Doce Lembrança';
         <div class="d-flex flex-wrap gap-2">
             <?= Html::a('+ Entrada de estoque', ['/movimentacao-estoque/entrada'], ['class' => 'btn btn-success']) ?>
             <?= Html::a('- Saida de estoque', ['/movimentacao-estoque/saida'], ['class' => 'btn btn-danger']) ?>
-            <?= Html::a('+ Registrar producao', ['/producao/create'], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a('+ Registrar produção', ['/producao/create'], ['class' => 'btn btn-primary']) ?>
         </div>
     </div>
 
