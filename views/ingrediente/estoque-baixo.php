@@ -10,9 +10,9 @@ $this->title = 'Ingredientes com Estoque Baixo';
 ?>
 
 <div class="ingrediente-estoque-baixo">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <h1 class="mb-0"><?= Html::encode($this->title) ?></h1>
-        <?= Html::a('Voltar', ['index'], ['class' => 'btn btn-secondary']) ?>
+        <?= Html::a('Voltar', ['index'], ['class' => 'btn btn-secondary btn-responsive']) ?>
     </div>
 
     <div class="alert alert-warning py-2">
@@ -26,6 +26,7 @@ $this->title = 'Ingredientes com Estoque Baixo';
         </div>
     </div>
 
+    <div class="table-responsive">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'tableOptions' => ['class' => 'table table-striped table-bordered', 'id' => 'tabela-estoque-baixo'],
@@ -61,6 +62,7 @@ $this->title = 'Ingredientes com Estoque Baixo';
             ],
         ],
     ]) ?>
+    </div>
 </div>
 
 <?php

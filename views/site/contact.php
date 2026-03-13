@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </p>
 
         <div class="row">
-            <div class="col-lg-5">
+            <div class="col-12 col-md-8 col-lg-5">
 
                 <?php $form = ActiveForm::begin(['id' => 'contact-form']); ?>
 
@@ -52,11 +52,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model, 'body')->textarea(['rows' => 6]) ?>
 
                     <?= $form->field($model, 'verifyCode')->widget(Captcha::class, [
-                        'template' => '<div class="row"><div class="col-lg-3">{image}</div><div class="col-lg-6">{input}</div></div>',
+                        'template' => '<div class="row g-2 align-items-center"><div class="col-12 col-sm-4 col-lg-3">{image}</div><div class="col-12 col-sm-8 col-lg-6">{input}</div></div>',
                     ]) ?>
 
                     <div class="form-group">
-                        <?= Html::submitButton('Submit', ['class' => 'btn btn-primary', 'name' => 'contact-button']) ?>
+                        <?= Html::submitButton('Submit', ['class' => 'btn btn-primary btn-responsive', 'name' => 'contact-button']) ?>
                     </div>
 
                 <?php ActiveForm::end(); ?>

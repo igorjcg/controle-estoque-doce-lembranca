@@ -44,6 +44,26 @@ a.desc:after {
     white-space: nowrap;
 }
 
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.grid-view .table td,
+.grid-view .table th {
+    vertical-align: middle;
+}
+
+.page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.page-actions .btn {
+    flex-shrink: 0;
+}
+
 .hint-block {
     display: block;
     margin-top: 5px;
@@ -93,4 +113,46 @@ a.desc:after {
 
 .navbar-brand {
     padding: 0;
+}
+
+@media (max-width: 575.98px) {
+    main > .container {
+        padding-top: 70px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .btn-responsive {
+        width: 100%;
+    }
+
+    .page-actions {
+        width: 100%;
+    }
+
+    .page-actions .btn {
+        width: 100%;
+    }
+
+    .grid-view th {
+        white-space: normal;
+    }
+
+    .grid-view .table td,
+    .grid-view .table th {
+        min-width: 110px;
+    }
+
+    .grid-view .table td:last-child,
+    .grid-view .table th:last-child {
+        min-width: 90px;
+    }
+
+    .table-responsive .table {
+        margin-bottom: 0;
+    }
+
+    .card .display-6 {
+        font-size: 1.75rem;
+    }
 }

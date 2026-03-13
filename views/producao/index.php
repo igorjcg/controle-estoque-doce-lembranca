@@ -11,11 +11,11 @@ $this->title = 'Produções';
 ?>
 
 <div class="producao-index">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <h1 class="mb-0"><?= Html::encode($this->title) ?></h1>
-        <div class="d-flex gap-2">
-            <?= Html::a('Análise de Produção', ['analise'], ['class' => 'btn btn-outline-primary']) ?>
-            <?= Html::a('Registrar Produção', ['create'], ['class' => 'btn btn-success']) ?>
+        <div class="page-actions">
+            <?= Html::a('Análise de Produção', ['analise'], ['class' => 'btn btn-outline-primary btn-responsive']) ?>
+            <?= Html::a('Registrar Produção', ['create'], ['class' => 'btn btn-success btn-responsive']) ?>
         </div>
     </div>
 
@@ -27,6 +27,7 @@ $this->title = 'Produções';
         </div>
     </div>
 
+    <div class="table-responsive">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'tableOptions' => ['class' => 'table table-striped table-bordered', 'id' => 'tabela-producoes'],
@@ -63,6 +64,7 @@ $this->title = 'Produções';
             ],
         ],
     ]) ?>
+    </div>
 </div>
 
 <?php

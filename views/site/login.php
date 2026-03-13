@@ -9,12 +9,13 @@ use yii\bootstrap5\Html;
 $this->title = 'Login';
 ?>
 
-<div class="d-flex align-items-center justify-content-center min-vh-100">
+<div class="d-flex align-items-center justify-content-center min-vh-100 py-4">
     <div class="card shadow-sm border-0" style="max-width: 420px; width: 100%;">
         <div class="card-body p-4 p-md-5">
             <h1 class="h4 mb-4 text-center">
                 <?= Html::img('@web/img/logoAntiga.jpg', [
-                    'style' => 'height:120px; width:auto;'
+                    'class' => 'img-fluid',
+                    'style' => 'max-height:120px; width:auto;'
                 ]) ?>
             </h1>
 

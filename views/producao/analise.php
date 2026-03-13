@@ -13,13 +13,13 @@ $this->title = 'Análise de Produção';
 ?>
 
 <div class="producao-analise">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
         <h1 class="mb-0"><?= Html::encode($this->title) ?></h1>
-        <?= Html::a('Voltar', ['index'], ['class' => 'btn btn-secondary']) ?>
+        <?= Html::a('Voltar', ['index'], ['class' => 'btn btn-secondary btn-responsive']) ?>
     </div>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-4">
+        <div class="col-12 col-md-6 col-lg-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
                     <h6 class="text-muted mb-2">Custo total produzido no mês</h6>
@@ -27,7 +27,7 @@ $this->title = 'Análise de Produção';
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-12 col-md-6 col-lg-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
                     <h6 class="text-muted mb-2">Valor do estoque atual</h6>
@@ -35,7 +35,7 @@ $this->title = 'Análise de Produção';
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-12 col-md-6 col-lg-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
                     <h6 class="text-muted mb-2">Lucro estimado</h6>
@@ -51,6 +51,7 @@ $this->title = 'Análise de Produção';
             <strong>Valor do estoque por ingrediente</strong>
         </div>
         <div class="card-body p-0">
+            <div class="table-responsive">
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
                 'tableOptions' => ['class' => 'table table-striped table-bordered mb-0'],
@@ -69,6 +70,7 @@ $this->title = 'Análise de Produção';
                     ],
                 ],
             ]) ?>
+            </div>
         </div>
     </div>
 </div>

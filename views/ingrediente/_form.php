@@ -18,16 +18,16 @@ $unidadesSiglas = ArrayHelper::map($unidadesList, 'id', 'sigla');
     <?php $form = ActiveForm::begin(); ?>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
             <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
         </div>
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
             <?= $form->field($model, 'unidade_medida_id')->dropDownList($unidades, ['prompt' => 'Selecione']) ?>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
             <?php
             $labelEstoqueMin = 'Estoque mínimo para alerta';
             if (isset($model->unidadeMedida) && $model->unidadeMedida) {
@@ -41,9 +41,9 @@ $unidadesSiglas = ArrayHelper::map($unidadesList, 'id', 'sigla');
         </div>
     </div>
 
-    <div class="form-group mt-3">
-        <?= Html::submitButton('Salvar', ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Voltar', ['index'], ['class' => 'btn btn-secondary']) ?>
+    <div class="form-group mt-3 page-actions">
+        <?= Html::submitButton('Salvar', ['class' => 'btn btn-primary btn-responsive']) ?>
+        <?= Html::a('Voltar', ['index'], ['class' => 'btn btn-secondary btn-responsive']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

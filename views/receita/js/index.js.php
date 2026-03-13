@@ -26,6 +26,8 @@
     const result = await Swal.fire({
       title: 'Utilizar receita',
       text: `Você deseja utilizar a receita ${receitaNome}?`,
+      width: '90%',
+      maxWidth: '500px',
       input: 'number',
       inputLabel: 'Quantidade',
       inputValue: 1,
@@ -64,6 +66,8 @@
           title: 'Erro',
           text: response?.message || 'Não foi possível utilizar a receita.',
           icon: 'error',
+          width: '90%',
+          maxWidth: '500px',
         });
         return;
       }
@@ -72,6 +76,8 @@
         title: 'Sucesso',
         text: 'Produção registrada com sucesso.',
         icon: 'success',
+        width: '90%',
+        maxWidth: '500px',
       });
       $.pjax.reload({ container: '#pjax-receitas', async: false });
     }).fail(() => {
@@ -79,6 +85,8 @@
         title: 'Erro',
         text: 'Não foi possível utilizar a receita.',
         icon: 'error',
+        width: '90%',
+        maxWidth: '500px',
       });
     });
   });

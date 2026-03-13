@@ -18,15 +18,15 @@ $this->title = 'Controle de Estoque Doce Lembrança';
 <div class="dashboard-index">
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
         <h1 class="mb-0"><?= Html::encode($this->title) ?></h1>
-        <div class="d-flex flex-wrap gap-2">
-            <?= Html::a('+ Entrada de estoque', ['/movimentacao-estoque/entrada'], ['class' => 'btn btn-success']) ?>
-            <?= Html::a('- Saida de estoque', ['/movimentacao-estoque/saida'], ['class' => 'btn btn-danger']) ?>
-            <?= Html::a('+ Registrar produção', ['/producao/create'], ['class' => 'btn btn-primary']) ?>
+        <div class="page-actions">
+            <?= Html::a('+ Entrada de estoque', ['/movimentacao-estoque/entrada'], ['class' => 'btn btn-success btn-responsive']) ?>
+            <?= Html::a('- Saida de estoque', ['/movimentacao-estoque/saida'], ['class' => 'btn btn-danger btn-responsive']) ?>
+            <?= Html::a('+ Registrar produção', ['/producao/create'], ['class' => 'btn btn-primary btn-responsive']) ?>
         </div>
     </div>
 
     <?php if ($totalEstoqueBaixo > 0): ?>
-    <div class="alert alert-danger d-flex align-items-center justify-content-between mb-4" role="alert">
+    <div class="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4" role="alert">
         <div>
             <strong>Atenção:</strong>
             <ul class="mb-0 mt-2 ps-3">
@@ -47,7 +47,7 @@ $this->title = 'Controle de Estoque Doce Lembrança';
     <?php endif; ?>
 
     <div class="row g-3 mb-4">
-        <div class="col-lg-4">
+        <div class="col-12 col-md-6 col-lg-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
@@ -64,7 +64,7 @@ $this->title = 'Controle de Estoque Doce Lembrança';
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-12 col-md-6 col-lg-4">
             <div class="card border-0 shadow-sm h-100 <?= $totalEstoqueBaixo > 0 ? 'border-danger' : '' ?>">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
@@ -80,13 +80,13 @@ $this->title = 'Controle de Estoque Doce Lembrança';
                     </div>
                     <?php if ($totalEstoqueBaixo > 0): ?>
                     <div class="mt-2">
-                        <?= Html::a('Ver lista ->', ['/ingrediente/estoque-baixo'], ['class' => 'btn btn-sm btn-outline-danger']) ?>
+                        <?= Html::a('Ver lista ->', ['/ingrediente/estoque-baixo'], ['class' => 'btn btn-sm btn-outline-danger btn-responsive']) ?>
                     </div>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-12 col-md-6 col-lg-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
@@ -102,12 +102,13 @@ $this->title = 'Controle de Estoque Doce Lembrança';
     </div>
 
     <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <div class="card-header bg-white d-flex flex-wrap justify-content-between align-items-center gap-2">
             <strong>Quantidade atual por ingrediente</strong>
-            <?= Html::a('Cadastrar ingrediente', ['/ingrediente/create'], ['class' => 'btn btn-sm btn-success']) ?>
+            <?= Html::a('Cadastrar ingrediente', ['/ingrediente/create'], ['class' => 'btn btn-sm btn-success btn-responsive']) ?>
         </div>
         <div class="card-body p-0">
             <?php Pjax::begin(); ?>
+            <div class="table-responsive">
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
                 'tableOptions' => ['class' => 'table table-striped table-hover mb-0'],
@@ -150,6 +151,7 @@ $this->title = 'Controle de Estoque Doce Lembrança';
                     ],
                 ],
             ]) ?>
+            </div>
             <?php Pjax::end(); ?>
         </div>
     </div>

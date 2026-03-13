@@ -34,9 +34,9 @@ $unidadeOptions = Html::renderSelectOptions(null, $unidades);
     </div>
 
     <div class="card mt-3">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <div class="card-header bg-white d-flex flex-wrap justify-content-between align-items-center gap-2">
             <strong>Ingredientes da Receita</strong>
-            <button type="button" class="btn btn-sm btn-outline-primary" id="btn-add-ingrediente">Adicionar Linha</button>
+            <button type="button" class="btn btn-sm btn-outline-primary btn-responsive" id="btn-add-ingrediente">Adicionar Linha</button>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -46,7 +46,7 @@ $unidadeOptions = Html::renderSelectOptions(null, $unidades);
                         <th>Ingrediente</th>
                         <th>Unidade</th>
                         <th>Quantidade</th>
-                        <th style="width: 80px;">Acao</th>
+                        <th style="min-width: 80px;">Acao</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -55,7 +55,7 @@ $unidadeOptions = Html::renderSelectOptions(null, $unidades);
                             <td><?= Html::dropDownList('ReceitaIngrediente[ingrediente_id][]', null, $ingredientes, ['class' => 'form-select', 'prompt' => 'Selecione']) ?></td>
                             <td><?= Html::dropDownList('ReceitaIngrediente[unidade_medida_id][]', null, $unidades, ['class' => 'form-select', 'prompt' => 'Selecione']) ?></td>
                             <td><?= Html::input('number', 'ReceitaIngrediente[quantidade][]', null, ['class' => 'form-control', 'step' => '0.001']) ?></td>
-                            <td><button type="button" class="btn btn-sm btn-outline-danger btn-remover">Remover</button></td>
+                            <td><button type="button" class="btn btn-sm btn-outline-danger btn-remover btn-responsive">Remover</button></td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($ingredientesReceita as $item): ?>
@@ -63,7 +63,7 @@ $unidadeOptions = Html::renderSelectOptions(null, $unidades);
                                 <td><?= Html::dropDownList('ReceitaIngrediente[ingrediente_id][]', $item->ingrediente_id, $ingredientes, ['class' => 'form-select', 'prompt' => 'Selecione']) ?></td>
                                 <td><?= Html::dropDownList('ReceitaIngrediente[unidade_medida_id][]', $item->unidade_medida_id, $unidades, ['class' => 'form-select', 'prompt' => 'Selecione']) ?></td>
                                 <td><?= Html::input('number', 'ReceitaIngrediente[quantidade][]', $item->quantidade, ['class' => 'form-control', 'step' => '0.001']) ?></td>
-                                <td><button type="button" class="btn btn-sm btn-outline-danger btn-remover">Remover</button></td>
+                                <td><button type="button" class="btn btn-sm btn-outline-danger btn-remover btn-responsive">Remover</button></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -73,9 +73,9 @@ $unidadeOptions = Html::renderSelectOptions(null, $unidades);
         </div>
     </div>
 
-    <div class="form-group mt-3">
-        <?= Html::submitButton('Salvar', ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Voltar', ['index'], ['class' => 'btn btn-secondary']) ?>
+    <div class="form-group mt-3 page-actions">
+        <?= Html::submitButton('Salvar', ['class' => 'btn btn-primary btn-responsive']) ?>
+        <?= Html::a('Voltar', ['index'], ['class' => 'btn btn-secondary btn-responsive']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -86,7 +86,7 @@ $unidadeOptions = Html::renderSelectOptions(null, $unidades);
         <td><select name="ReceitaIngrediente[ingrediente_id][]" class="form-select"><option value="">Selecione</option><?= $ingredienteOptions ?></select></td>
         <td><select name="ReceitaIngrediente[unidade_medida_id][]" class="form-select"><option value="">Selecione</option><?= $unidadeOptions ?></select></td>
         <td><input type="number" name="ReceitaIngrediente[quantidade][]" class="form-control" step="0.001"></td>
-        <td><button type="button" class="btn btn-sm btn-outline-danger btn-remover">Remover</button></td>
+        <td><button type="button" class="btn btn-sm btn-outline-danger btn-remover btn-responsive">Remover</button></td>
     </tr>
 </template>
 

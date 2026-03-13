@@ -9,6 +9,8 @@
         title: 'Confirmar exclusão',
         text: message || 'Tem certeza que deseja excluir este item?',
         icon: 'warning',
+        width: '90%',
+        maxWidth: '500px',
         showCancelButton: true,
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',

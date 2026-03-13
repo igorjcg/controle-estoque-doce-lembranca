@@ -10,11 +10,11 @@ $this->title = 'Histórico de Movimentações';
 ?>
 
 <div class="movimentacao-estoque-historico">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <h1 class="mb-0"><?= Html::encode($this->title) ?></h1>
-        <div class="d-flex gap-2">
-            <?= Html::a('Entrada', ['entrada'], ['class' => 'btn btn-success']) ?>
-            <?= Html::a('Saida', ['saida'], ['class' => 'btn btn-danger']) ?>
+        <div class="page-actions">
+            <?= Html::a('Entrada', ['entrada'], ['class' => 'btn btn-success btn-responsive']) ?>
+            <?= Html::a('Saida', ['saida'], ['class' => 'btn btn-danger btn-responsive']) ?>
         </div>
     </div>
 
@@ -26,6 +26,7 @@ $this->title = 'Histórico de Movimentações';
         </div>
     </div>
 
+    <div class="table-responsive">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'tableOptions' => ['class' => 'table table-striped table-bordered', 'id' => 'tabela-historico'],
@@ -76,6 +77,7 @@ $this->title = 'Histórico de Movimentações';
             ],
         ],
     ]) ?>
+    </div>
 </div>
 
 <?php
