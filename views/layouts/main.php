@@ -62,6 +62,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             ['label' => 'Receitas', 'url' => ['/receita/index']],
             ['label' => 'Medidas', 'url' => ['/unidade-medida/index']],
             ['label' => 'Movimentações', 'url' => ['/movimentacao-estoque/historico']],
+            ['label' => 'Produção', 'url' => ['/producao/index']],
             '<li class="nav-item">'
             . Html::beginForm(['/site/logout'])
             . Html::submitButton(

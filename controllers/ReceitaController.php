@@ -2,9 +2,7 @@
 
 namespace app\controllers;
 
-use app\common\util\UnidadeUtil;
-use app\models\Ingrediente;
-use app\models\MovimentacaoEstoque;
+use app\models\Producao;
 use Yii;
 use app\models\Receita;
 use app\models\ReceitaIngrediente;
@@ -40,9 +38,6 @@ class ReceitaController extends Controller
         ];
     }
 
-    /**
-     * Lista receitas ativas.
-     */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
@@ -70,78 +65,14 @@ class ReceitaController extends Controller
             ];
         }
 
-        $receita = $this->findModel((int) $id);
-        $itensReceita = ReceitaIngrediente::find()
-            ->where(['receita_id' => $receita->id])
-            ->with(['ingrediente.unidadeMedida', 'unidadeMedida'])
-            ->all();
-
-        if ($itensReceita === []) {
-            return [
-                'success' => false,
-                'message' => 'A receita não possui ingredientes cadastrados.',
-            ];
-        }
-
-        $movimentacoes = [];
-        foreach ($itensReceita as $item) {
-            $ingrediente = $item->ingrediente;
-            $unidadeOrigem = $item->unidadeMedida;
-            $unidadeBaseIngrediente = $ingrediente?->unidadeMedida;
-
-            if ($ingrediente === null || $unidadeOrigem === null || $unidadeBaseIngrediente === null) {
-                return [
-                    'success' => false,
-                    'message' => 'Ingrediente ou unidade de medida inválidos na receita.',
-                ];
-            }
-
-            $quantidadeNecessaria = (float) $item->quantidade * $quantidadeProduzida;
-            $quantidadeEmBase = UnidadeUtil::converterParaBase(
-                $quantidadeNecessaria,
-                $unidadeOrigem,
-                $unidadeBaseIngrediente
-            );
-
-            if ($ingrediente->getEstoqueAtual() < $quantidadeEmBase) {
-                return [
-                    'success' => false,
-                    'message' => "Estoque insuficiente para o ingrediente {$ingrediente->nome}.",
-                ];
-            }
-
-            $movimentacoes[] = [
-                'ingrediente' => $ingrediente,
-                'quantidade' => $quantidadeEmBase,
-            ];
-        }
-
-        $transaction = Yii::$app->db->beginTransaction();
         try {
-            foreach ($movimentacoes as $item) {
-                /** @var Ingrediente $ingrediente */
-                $ingrediente = $item['ingrediente'];
-                $movimentacao = new MovimentacaoEstoque();
-                $movimentacao->ingrediente_id = $ingrediente->id;
-                $movimentacao->tipo_movimento = 'saida';
-                $movimentacao->quantidade = $item['quantidade'];
-                $movimentacao->valor_unitario = (string) $ingrediente->custo_medio;
-                $movimentacao->observacao = "Baixa automática ao utilizar a receita: {$receita->nome}";
-
-                if (!$movimentacao->save()) {
-                    throw new Exception("Falha ao registrar movimentação do ingrediente {$ingrediente->nome}.");
-                }
-            }
-
-            $transaction->commit();
+            Producao::registrar((int) $id, $quantidadeProduzida, 'Produção registrada pela listagem de receitas.');
 
             return [
                 'success' => true,
                 'message' => 'Produção registrada com sucesso.',
             ];
         } catch (\Throwable $e) {
-            $transaction->rollBack();
-
             return [
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -149,12 +80,9 @@ class ReceitaController extends Controller
         }
     }
 
-    /**
-     * Exibe detalhes de uma receita e seus ingredientes.
-     */
     public function actionView($id)
     {
-        $model = $this->findModel((int)$id);
+        $model = $this->findModel((int) $id);
         $ingredientesReceita = ReceitaIngrediente::find()
             ->where(['receita_id' => $model->id])
             ->with(['ingrediente', 'unidadeMedida'])
@@ -166,9 +94,6 @@ class ReceitaController extends Controller
         ]);
     }
 
-    /**
-     * Cria uma receita e permite cadastrar os ingredientes associados.
-     */
     public function actionCreate()
     {
         $model = new Receita();
@@ -199,12 +124,9 @@ class ReceitaController extends Controller
         ]);
     }
 
-    /**
-     * Atualiza uma receita e seus ingredientes associados.
-     */
     public function actionUpdate($id)
     {
-        $model = $this->findModel((int)$id);
+        $model = $this->findModel((int) $id);
 
         if ($model->load(Yii::$app->request->post())) {
             $transaction = Yii::$app->db->beginTransaction();
@@ -238,12 +160,9 @@ class ReceitaController extends Controller
         ]);
     }
 
-    /**
-     * Exclui logicamente uma receita (soft delete).
-     */
     public function actionDelete($id)
     {
-        $model = $this->findModel((int)$id);
+        $model = $this->findModel((int) $id);
         $model->flag_del = 1;
 
         if ($model->save(false)) {
@@ -255,9 +174,6 @@ class ReceitaController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Salva os itens da receita na tabela pivô.
-     */
     protected function salvarIngredientesReceita(int $receitaId, array $itensReceita): bool
     {
         ReceitaIngrediente::deleteAll(['receita_id' => $receitaId]);
@@ -269,9 +185,9 @@ class ReceitaController extends Controller
 
             $receitaIngrediente = new ReceitaIngrediente();
             $receitaIngrediente->receita_id = $receitaId;
-            $receitaIngrediente->ingrediente_id = (int)$item['ingrediente_id'];
-            $receitaIngrediente->unidade_medida_id = (int)$item['unidade_medida_id'];
-            $receitaIngrediente->quantidade = (float)$item['quantidade'];
+            $receitaIngrediente->ingrediente_id = (int) $item['ingrediente_id'];
+            $receitaIngrediente->unidade_medida_id = (int) $item['unidade_medida_id'];
+            $receitaIngrediente->quantidade = (float) $item['quantidade'];
 
             if (!$receitaIngrediente->save()) {
                 return false;
@@ -281,9 +197,6 @@ class ReceitaController extends Controller
         return true;
     }
 
-    /**
-     * Normaliza o payload de ingredientes da receita.
-     */
     protected function extrairItensReceita(array $payload): array
     {
         if ($payload === []) {
@@ -312,9 +225,6 @@ class ReceitaController extends Controller
         return $itens;
     }
 
-    /**
-     * Busca a receita ativa pelo ID.
-     */
     protected function findModel(int $id): Receita
     {
         $model = Receita::find()->andWhere(['id' => $id])->one();

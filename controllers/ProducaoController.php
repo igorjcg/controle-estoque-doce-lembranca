@@ -2,15 +2,13 @@
 
 namespace app\controllers;
 
-use app\common\util\UnidadeUtil;
-use app\models\MovimentacaoEstoque;
+use app\models\Ingrediente;
 use app\models\Producao;
-use app\models\Receita;
-use app\models\ReceitaIngrediente;
 use Yii;
 use yii\data\ActiveDataProvider;
-use yii\db\Exception;
+use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -28,16 +26,19 @@ class ProducaoController extends Controller
                     ],
                 ],
             ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
         ];
     }
 
-    /**
-     * Lista producoes cadastradas.
-     */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Producao::find()->with('receita')->orderBy(['created_at' => SORT_DESC, 'id' => SORT_DESC]),
+            'query' => Producao::find()->with(['receita', 'criadoPor'])->orderBy(['created_at' => SORT_DESC, 'id' => SORT_DESC]),
             'pagination' => ['pageSize' => 20],
         ]);
 
@@ -46,89 +47,104 @@ class ProducaoController extends Controller
         ]);
     }
 
-    /**
-     * Registra uma producao e as saídas de estoque (apenas movimentações).
-     */
     public function actionCreate()
     {
         $model = new Producao();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $transaction = Yii::$app->db->beginTransaction();
-            try {
-                $receita = Receita::find()
-                    ->where(['id' => (int) $model->receita_id])
-                    ->one();
-                if ($receita === null) {
-                    throw new NotFoundHttpException('Receita nao encontrada.');
-                }
-
-                $itensReceita = ReceitaIngrediente::find()
-                    ->where(['receita_id' => $receita->id])
-                    ->with(['ingrediente.unidadeMedida', 'unidadeMedida'])
-                    ->all();
-
-                if (empty($itensReceita)) {
-                    throw new Exception('A receita nao possui ingredientes.');
-                }
-
-                $fatorProducao = (float) $model->quantidade;
-                if ($fatorProducao <= 0) {
-                    $model->addError('quantidade', 'A quantidade de producao deve ser maior que zero.');
-                    throw new Exception('Quantidade de producao invalida.');
-                }
-
-                foreach ($itensReceita as $item) {
-                    $ingrediente = $item->ingrediente;
-                    $unidadeOrigem = $item->unidadeMedida;
-                    $unidadeBaseIngrediente = $ingrediente?->unidadeMedida;
-
-                    if ($ingrediente === null || $unidadeOrigem === null || $unidadeBaseIngrediente === null) {
-                        throw new Exception('Ingrediente ou unidade de medida invalidos na receita.');
-                    }
-
-                    $quantidadeReceita = (float) $item->quantidade * $fatorProducao;
-                    $quantidadeEmBase = UnidadeUtil::converterParaBase(
-                        $quantidadeReceita,
-                        $unidadeOrigem,
-                        $unidadeBaseIngrediente
-                    );
-
-                    $estoqueAtual = $ingrediente->getEstoqueAtual();
-                    if ($estoqueAtual < $quantidadeEmBase) {
-                        throw new Exception("Estoque insuficiente para o ingrediente {$ingrediente->nome}.");
-                    }
-
-                    $movimentacao = new MovimentacaoEstoque();
-                    $movimentacao->ingrediente_id = $ingrediente->id;
-                    $movimentacao->tipo_movimento = 'saida';
-                    $movimentacao->quantidade = $quantidadeEmBase;
-                    $movimentacao->valor_unitario = (string) $ingrediente->custo_medio;
-                    $movimentacao->valor_total = bcmul((string) $quantidadeEmBase, (string) $ingrediente->custo_medio, 6);
-                    $movimentacao->observacao = "Baixa automatica da producao da receita: {$receita->nome}";
-
-                    if (!$movimentacao->save()) {
-                        throw new Exception("Falha ao registrar movimentacao do ingrediente {$ingrediente->nome}.");
-                    }
-                }
-
-                if (!$model->save()) {
-                    throw new Exception('Falha ao salvar producao.');
-                }
-
-                $transaction->commit();
-                Yii::$app->session->setFlash('success', 'Producao registrada com sucesso.');
-                return $this->redirect(['index']);
-            } catch (\Throwable $e) {
-                $transaction->rollBack();
-                if (!$model->hasErrors()) {
-                    Yii::$app->session->setFlash('error', $e->getMessage());
-                }
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->salvarComMovimentacoes()) {
+            Yii::$app->session->setFlash('success', 'Produção registrada com sucesso.');
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
             'model' => $model,
         ]);
+    }
+
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel((int) $id),
+        ]);
+    }
+
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel((int) $id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->salvarComMovimentacoes()) {
+            Yii::$app->session->setFlash('success', 'Produção atualizada com sucesso.');
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionDelete($id)
+    {
+        $model = $this->findModel((int) $id);
+
+        if ($model->excluirComMovimentacoes()) {
+            Yii::$app->session->setFlash('success', 'Produção removida com sucesso.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Não foi possível remover a produção.');
+        }
+
+        return $this->redirect(['index']);
+    }
+
+    public function actionAnalise()
+    {
+        $inicioMes = strtotime(date('Y-m-01 00:00:00'));
+        $fimMes = strtotime(date('Y-m-t 23:59:59'));
+
+        $custoTotalMes = (float) Producao::find()
+            ->andWhere(['between', 'created_at', $inicioMes, $fimMes])
+            ->sum('custo_total');
+
+        $ingredientes = Ingrediente::find()->with('unidadeMedida')->orderBy(['nome' => SORT_ASC])->all();
+        $valorEstoqueAtual = 0.0;
+        $analiseEstoque = [];
+
+        foreach ($ingredientes as $ingrediente) {
+            $estoqueAtual = $ingrediente->getEstoqueAtual();
+            $valorTotal = $estoqueAtual * (float) $ingrediente->custo_medio;
+            $valorEstoqueAtual += $valorTotal;
+
+            $analiseEstoque[] = [
+                'nome' => $ingrediente->nome,
+                'estoque_atual' => $ingrediente->estoqueAtualComUnidadeFormatado,
+                'custo_medio' => (float) $ingrediente->custo_medio,
+                'valor_total' => $valorTotal,
+            ];
+        }
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $analiseEstoque,
+            'pagination' => ['pageSize' => 20],
+        ]);
+
+        return $this->render('analise', [
+            'custoTotalMes' => $custoTotalMes,
+            'valorEstoqueAtual' => $valorEstoqueAtual,
+            'lucroEstimadoFormula' => 'preco_venda - custo_unitario',
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    protected function findModel(int $id): Producao
+    {
+        $model = Producao::find()
+            ->with(['receita', 'criadoPor', 'movimentacoesEstoque.ingrediente'])
+            ->andWhere(['id' => $id])
+            ->one();
+
+        if ($model === null) {
+            throw new NotFoundHttpException('Produção não encontrada.');
+        }
+
+        return $model;
     }
 }
