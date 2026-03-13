@@ -12,6 +12,15 @@ use yii\bootstrap5\NavBar;
 
 AppAsset::register($this);
 
+$this->registerCssFile('https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css');
+$this->registerJsFile('https://cdn.jsdelivr.net/npm/sweetalert2@11', [
+    'depends' => [\yii\web\JqueryAsset::class],
+]);
+$confirmJsUrl = Yii::$app->assetManager->publish('@app/views/layouts/js/yii-confirm.js.php')[1];
+$this->registerJsFile($confirmJsUrl, [
+    'depends' => [\yii\web\JqueryAsset::class],
+]);
+
 $this->registerCsrfMetaTags();
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
 $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);

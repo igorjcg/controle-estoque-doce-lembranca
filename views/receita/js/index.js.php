@@ -29,7 +29,7 @@
       input: 'number',
       inputLabel: 'Quantidade',
       inputValue: 1,
-      inputClass: 'swal-input-quantidade',
+      customClass: { input: 'swal-input-quantidade' },
       inputAttributes: {
         min: 1,
         step: 1,
@@ -60,14 +60,26 @@
       },
     }).done((response) => {
       if (!response || !response.success) {
-        Swal.fire('Erro', response?.message || 'Não foi possível utilizar a receita.', 'error');
+        Swal.fire({
+          title: 'Erro',
+          text: response?.message || 'Não foi possível utilizar a receita.',
+          icon: 'error',
+        });
         return;
       }
 
-      Swal.fire('Sucesso', 'Produção registrada com sucesso.', 'success');
+      Swal.fire({
+        title: 'Sucesso',
+        text: 'Produção registrada com sucesso.',
+        icon: 'success',
+      });
       $.pjax.reload({ container: '#pjax-receitas', async: false });
     }).fail(() => {
-      Swal.fire('Erro', 'Não foi possível utilizar a receita.', 'error');
+      Swal.fire({
+        title: 'Erro',
+        text: 'Não foi possível utilizar a receita.',
+        icon: 'error',
+      });
     });
   });
 })();

@@ -9,6 +9,15 @@ use yii\helpers\Url;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Receitas';
+
+$this->registerCss("
+.swal2-popup .swal-input-quantidade {
+    width: 90px !important;
+    margin: 0 auto;
+    text-align: center;
+    font-weight: 600;
+}
+");
 ?>
 
 <div class="receita-index">
@@ -66,10 +75,6 @@ $this->title = 'Receitas';
 </div>
 
 <?php
-$this->registerCssFile('https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css');
-$this->registerJsFile('https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js', [
-    'depends' => [\yii\web\JqueryAsset::class],
-]);
 $jsUrl = Yii::$app->assetManager->publish('@app/views/receita/js/index.js.php')[1];
 $this->registerJsFile($jsUrl, [
     'depends' => [\yii\web\JqueryAsset::class],
