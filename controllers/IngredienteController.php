@@ -9,6 +9,7 @@ use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 class IngredienteController extends Controller
 {
@@ -121,6 +122,29 @@ class IngredienteController extends Controller
 
         return $this->render('estoque-baixo', [
             'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Retorna a unidade base do ingrediente em JSON para uso no formulário de receitas.
+     */
+    public function actionUnidade($id): Response
+    {
+        $ingrediente = Ingrediente::find()
+            ->with('unidadeMedida')
+            ->andWhere(['id' => (int) $id])
+            ->one();
+
+        if ($ingrediente === null) {
+            return $this->asJson([
+                'unidade' => null,
+                'unidade_medida_id' => null,
+            ]);
+        }
+
+        return $this->asJson([
+            'unidade' => $ingrediente->unidadeMedida->sigla ?? null,
+            'unidade_medida_id' => $ingrediente->unidade_medida_id,
         ]);
     }
 

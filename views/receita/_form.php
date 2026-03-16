@@ -1,9 +1,9 @@
-﻿<?php
+<?php
 
 use app\models\Ingrediente;
-use app\models\UnidadeMedida;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
@@ -11,14 +11,9 @@ use yii\widgets\ActiveForm;
 /** @var app\models\ReceitaIngrediente[] $ingredientesReceita */
 
 $ingredientesReceita = $ingredientesReceita ?? [];
-$ingredientes = ArrayHelper::map(Ingrediente::find()->orderBy(['nome' => SORT_ASC])->all(), 'id', 'nome');
-$unidades = ArrayHelper::map(
-    UnidadeMedida::find()->orderBy(['nome' => SORT_ASC])->all(),
-    'id',
-    static fn($item) => $item->nome . ' (' . $item->sigla . ')'
-);
+$ingredientes = ArrayHelper::map(Ingrediente::find()->with('unidadeMedida')->orderBy(['nome' => SORT_ASC])->all(), 'id', 'nome');
 $ingredienteOptions = Html::renderSelectOptions(null, $ingredientes);
-$unidadeOptions = Html::renderSelectOptions(null, $unidades);
+$unidadeUrl = Url::to(['ingrediente/unidade']);
 ?>
 
 <div class="receita-form">
@@ -40,7 +35,7 @@ $unidadeOptions = Html::renderSelectOptions(null, $unidades);
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered align-middle" id="tabela-ingredientes">
+                <table class="table table-bordered align-middle" id="tabela-ingredientes" data-unidade-url="<?= Html::encode($unidadeUrl) ?>">
                     <thead>
                     <tr>
                         <th>Ingrediente</th>
@@ -52,16 +47,42 @@ $unidadeOptions = Html::renderSelectOptions(null, $unidades);
                     <tbody>
                     <?php if (empty($ingredientesReceita)): ?>
                         <tr>
-                            <td><?= Html::dropDownList('ReceitaIngrediente[ingrediente_id][]', null, $ingredientes, ['class' => 'form-select', 'prompt' => 'Selecione']) ?></td>
-                            <td><?= Html::dropDownList('ReceitaIngrediente[unidade_medida_id][]', null, $unidades, ['class' => 'form-select', 'prompt' => 'Selecione']) ?></td>
+                            <td>
+                                <?= Html::dropDownList('ReceitaIngrediente[ingrediente_id][]', null, $ingredientes, [
+                                    'class' => 'form-select js-ingrediente-select',
+                                    'prompt' => 'Selecione',
+                                ]) ?>
+                            </td>
+                            <td>
+                                <?= Html::hiddenInput('ReceitaIngrediente[unidade_medida_id][]', null, ['class' => 'js-unidade-id']) ?>
+                                <?= Html::textInput('ReceitaIngrediente[unidade_medida][]', null, [
+                                    'class' => 'form-control js-unidade-display',
+                                    'readonly' => true,
+                                    'tabindex' => -1,
+                                    'placeholder' => 'Selecione um ingrediente',
+                                ]) ?>
+                            </td>
                             <td><?= Html::input('number', 'ReceitaIngrediente[quantidade][]', null, ['class' => 'form-control', 'step' => '0.001']) ?></td>
                             <td><button type="button" class="btn btn-sm btn-outline-danger btn-remover btn-responsive">Remover</button></td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($ingredientesReceita as $item): ?>
                             <tr>
-                                <td><?= Html::dropDownList('ReceitaIngrediente[ingrediente_id][]', $item->ingrediente_id, $ingredientes, ['class' => 'form-select', 'prompt' => 'Selecione']) ?></td>
-                                <td><?= Html::dropDownList('ReceitaIngrediente[unidade_medida_id][]', $item->unidade_medida_id, $unidades, ['class' => 'form-select', 'prompt' => 'Selecione']) ?></td>
+                                <td>
+                                    <?= Html::dropDownList('ReceitaIngrediente[ingrediente_id][]', $item->ingrediente_id, $ingredientes, [
+                                        'class' => 'form-select js-ingrediente-select',
+                                        'prompt' => 'Selecione',
+                                    ]) ?>
+                                </td>
+                                <td>
+                                    <?= Html::hiddenInput('ReceitaIngrediente[unidade_medida_id][]', $item->unidade_medida_id, ['class' => 'js-unidade-id']) ?>
+                                    <?= Html::textInput('ReceitaIngrediente[unidade_medida][]', $item->unidadeMedida->sigla ?? '', [
+                                        'class' => 'form-control js-unidade-display',
+                                        'readonly' => true,
+                                        'tabindex' => -1,
+                                        'placeholder' => 'Selecione um ingrediente',
+                                    ]) ?>
+                                </td>
                                 <td><?= Html::input('number', 'ReceitaIngrediente[quantidade][]', $item->quantidade, ['class' => 'form-control', 'step' => '0.001']) ?></td>
                                 <td><button type="button" class="btn btn-sm btn-outline-danger btn-remover btn-responsive">Remover</button></td>
                             </tr>
@@ -83,8 +104,16 @@ $unidadeOptions = Html::renderSelectOptions(null, $unidades);
 
 <template id="receita-ingrediente-row-template">
     <tr>
-        <td><select name="ReceitaIngrediente[ingrediente_id][]" class="form-select"><option value="">Selecione</option><?= $ingredienteOptions ?></select></td>
-        <td><select name="ReceitaIngrediente[unidade_medida_id][]" class="form-select"><option value="">Selecione</option><?= $unidadeOptions ?></select></td>
+        <td>
+            <select name="ReceitaIngrediente[ingrediente_id][]" class="form-select js-ingrediente-select">
+                <option value="">Selecione</option>
+                <?= $ingredienteOptions ?>
+            </select>
+        </td>
+        <td>
+            <input type="hidden" name="ReceitaIngrediente[unidade_medida_id][]" class="js-unidade-id">
+            <input type="text" name="ReceitaIngrediente[unidade_medida][]" class="form-control js-unidade-display" readonly tabindex="-1" placeholder="Selecione um ingrediente">
+        </td>
         <td><input type="number" name="ReceitaIngrediente[quantidade][]" class="form-control" step="0.001"></td>
         <td><button type="button" class="btn btn-sm btn-outline-danger btn-remover btn-responsive">Remover</button></td>
     </tr>
