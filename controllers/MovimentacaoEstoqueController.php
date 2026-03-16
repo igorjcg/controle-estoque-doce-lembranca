@@ -8,10 +8,9 @@ use app\models\MovimentacaoEstoque;
 use yii\data\ActiveDataProvider;
 use yii\db\Exception;
 use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-class MovimentacaoEstoqueController extends Controller
+class MovimentacaoEstoqueController extends BaseController
 {
     public function behaviors(): array
     {

@@ -6,10 +6,9 @@ use Yii;
 use app\models\UnidadeMedida;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-class UnidadeMedidaController extends Controller
+class UnidadeMedidaController extends BaseController
 {
     public function behaviors(): array
     {
@@ -50,7 +49,7 @@ class UnidadeMedidaController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Unidade de medida cadastrada com sucesso.');
-            return $this->redirect(['index']);
+            return $this->redirectAfterCreate();
         }
 
         return $this->render('create', [
@@ -67,7 +66,7 @@ class UnidadeMedidaController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Unidade de medida atualizada com sucesso.');
-            return $this->redirect(['index']);
+            return $this->redirectAfterCreate();
         }
 
         return $this->render('update', [
@@ -89,7 +88,7 @@ class UnidadeMedidaController extends Controller
             Yii::$app->session->setFlash('error', 'Não foi possível remover a unidade de medida.');
         }
 
-        return $this->redirect(['index']);
+        return $this->redirectAfterCreate();
     }
 
     /**

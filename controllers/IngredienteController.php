@@ -7,11 +7,10 @@ use app\models\Ingrediente;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-class IngredienteController extends Controller
+class IngredienteController extends BaseController
 {
     public function behaviors(): array
     {
@@ -62,7 +61,7 @@ class IngredienteController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Ingrediente cadastrado com sucesso.');
-            return $this->redirect(['index']);
+            return $this->redirectAfterCreate();
         }
 
         return $this->render('create', [
@@ -79,7 +78,7 @@ class IngredienteController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Ingrediente atualizado com sucesso.');
-            return $this->redirect(['index']);
+            return $this->redirectAfterCreate();
         }
 
         return $this->render('update', [
@@ -101,7 +100,7 @@ class IngredienteController extends Controller
             Yii::$app->session->setFlash('error', 'Não foi possível remover o ingrediente.');
         }
 
-        return $this->redirect(['index']);
+        return $this->redirectAfterCreate();
     }
 
     /**

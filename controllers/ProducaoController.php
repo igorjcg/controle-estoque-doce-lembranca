@@ -9,10 +9,9 @@ use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-class ProducaoController extends Controller
+class ProducaoController extends BaseController
 {
     public function behaviors(): array
     {
@@ -53,7 +52,7 @@ class ProducaoController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->salvarComMovimentacoes()) {
             Yii::$app->session->setFlash('success', 'Produção registrada com sucesso.');
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirectAfterCreate();
         }
 
         return $this->render('create', [
@@ -74,7 +73,7 @@ class ProducaoController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->salvarComMovimentacoes()) {
             Yii::$app->session->setFlash('success', 'Produção atualizada com sucesso.');
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirectAfterCreate();
         }
 
         return $this->render('update', [
@@ -92,7 +91,7 @@ class ProducaoController extends Controller
             Yii::$app->session->setFlash('error', 'Não foi possível remover a produção.');
         }
 
-        return $this->redirect(['index']);
+        return $this->redirectAfterCreate();
     }
 
     public function actionAnalise()

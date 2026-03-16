@@ -10,11 +10,10 @@ use yii\data\ActiveDataProvider;
 use yii\db\Exception;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-class ReceitaController extends Controller
+class ReceitaController extends BaseController
 {
     public function behaviors(): array
     {
@@ -112,7 +111,7 @@ class ReceitaController extends Controller
 
                 $transaction->commit();
                 Yii::$app->session->setFlash('success', 'Receita cadastrada com sucesso.');
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirectAfterCreate();
             } catch (\Throwable $e) {
                 $transaction->rollBack();
                 Yii::$app->session->setFlash('error', 'Não foi possível cadastrar a receita.');
@@ -142,7 +141,7 @@ class ReceitaController extends Controller
 
                 $transaction->commit();
                 Yii::$app->session->setFlash('success', 'Receita atualizada com sucesso.');
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirectAfterCreate();
             } catch (\Throwable $e) {
                 $transaction->rollBack();
                 Yii::$app->session->setFlash('error', 'Não foi possível atualizar a receita.');
@@ -171,7 +170,7 @@ class ReceitaController extends Controller
             Yii::$app->session->setFlash('error', 'Não foi possível remover a receita.');
         }
 
-        return $this->redirect(['index']);
+        return $this->redirectAfterCreate();
     }
 
     protected function salvarIngredientesReceita(int $receitaId, array $itensReceita): bool
