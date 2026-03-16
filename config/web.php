@@ -6,7 +6,8 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
-	'defaultRoute' => 'site/index',
+    'defaultRoute' => 'site/index',
+    'timeZone' => 'America/Sao_Paulo',
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -47,18 +48,22 @@ $config = [
         'formatter' => [
             'class' => 'yii\i18n\Formatter',
             'locale' => 'pt-BR',
+            'dateFormat' => 'php:d/m/Y',
+            'datetimeFormat' => 'php:d/m/Y H:i:s',
+            'timeZone' => 'America/Sao_Paulo',
+            'defaultTimeZone' => 'America/Sao_Paulo',
             'decimalSeparator' => ',',
             'thousandSeparator' => '.',
             'nullDisplay' => '-',
         ],
-		'urlManager' => [
-			'class' => 'yii\web\UrlManager',
-			'enablePrettyUrl' => true,
-			'showScriptName' => false,
-			'enableStrictParsing' => false,
-			'rules' => [
-			],
-		],
+        'urlManager' => [
+            'class' => 'yii\web\UrlManager',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'enableStrictParsing' => false,
+            'rules' => [
+            ],
+        ],
     ],
     'params' => $params,
 ];
