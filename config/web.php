@@ -15,8 +15,13 @@ $config = [
     ],
     'components' => [
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => '_VkUfos6ToAWIgkxOVZr6NNwRJ00o5XY',
+            'trustedHosts' => ['*'],
+            'secureHeaders' => [
+                'X-Forwarded-For',
+                'X-Forwarded-Host',
+                'X-Forwarded-Proto',
+            ],
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -58,11 +63,11 @@ $config = [
         ],
         'urlManager' => [
             'class' => 'yii\web\UrlManager',
+            'hostInfo' => 'https://docelembranca.mooo.com',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'enableStrictParsing' => false,
-            'rules' => [
-            ],
+            'rules' => [],
         ],
     ],
     'params' => $params,
