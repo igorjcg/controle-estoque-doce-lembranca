@@ -84,3 +84,8 @@ database_dump.sql
 # Uploads locais (se existir)
 ############################
 web/uploads/*
+
+############################
+# Configurações locais
+############################
+/config/db-local.php
