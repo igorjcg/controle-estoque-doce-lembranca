@@ -2,9 +2,9 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=doce_lembranca',
-    'username' => 'root',
-    'password' => '',
+    'dsn' => 'mysql:host=localhost;dbname=controle_estoque',
+    'username' => 'estoque_user',
+    'password' => 'SUA_SENHA',
     'charset' => 'utf8',
 
     // Schema cache options (for production environment)
