@@ -4,7 +4,7 @@ return [
     'class' => 'yii\db\Connection',
     'dsn' => 'mysql:host=localhost;dbname=controle_estoque',
     'username' => 'estoque_user',
-    'password' => 'SUA_SENHA',
+    'password' => 'REMOVIDO',
     'charset' => 'utf8',
 
     // Schema cache options (for production environment)
