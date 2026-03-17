@@ -89,3 +89,4 @@ web/uploads/*
 # Configurações locais
 ############################
 /config/db-local.php
+/config/db.php
