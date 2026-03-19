@@ -121,6 +121,28 @@ $this->registerJsFile($jsUrl, [
 ?>
 
 <div class="dashboard-index">
+
+    <?php if ($totalEstoqueBaixo > 0): ?>
+        <div class="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4" role="alert">
+            <div>
+                <strong>Atenção:</strong>
+                <ul class="mb-0 mt-2 ps-3">
+                    <?php foreach ($ingredientesEstoqueBaixo as $ingrediente): ?>
+                        <?php
+                        $estoqueAtual = Html::encode($ingrediente->estoqueAtualComUnidadeFormatado);
+                        $minimo = Html::encode($ingrediente->estoqueMinimoAlertaComUnidadeFormatado);
+                        ?>
+                        <li>
+                            <strong><?= Html::encode($ingrediente->nome) ?>:</strong>
+                            estoque atual em <?= $estoqueAtual ?>, abaixo do mínimo de <?= $minimo ?>.
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+                <?= Html::a('Ver lista de estoque baixo', ['/ingrediente/estoque-baixo'], ['class' => 'btn btn-outline-danger btn-responsive mt-3 mt-md-2']) ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
     <div class="dashboard-hero rounded-4 p-4 p-lg-5 mb-4">
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
             <div>
@@ -135,28 +157,7 @@ $this->registerJsFile($jsUrl, [
             </div>
         </div>
     </div>
-
-    <?php if ($totalEstoqueBaixo > 0): ?>
-    <div class="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4" role="alert">
-        <div>
-            <strong>Atenção:</strong>
-            <ul class="mb-0 mt-2 ps-3">
-                <?php foreach ($ingredientesEstoqueBaixo as $ingrediente): ?>
-                    <?php
-                    $estoqueAtual = Html::encode($ingrediente->estoqueAtualComUnidadeFormatado);
-                    $minimo = Html::encode($ingrediente->estoqueMinimoAlertaComUnidadeFormatado);
-                    ?>
-                    <li>
-                        <strong><?= Html::encode($ingrediente->nome) ?>:</strong>
-                        estoque atual em <?= $estoqueAtual ?>, abaixo do mínimo de <?= $minimo ?>.
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-            <?= Html::a('Ver lista de estoque baixo', ['/ingrediente/estoque-baixo'], ['class' => 'btn btn-outline-danger btn-responsive mt-3 mt-md-2']) ?>
-        </div>
-    </div>
-    <?php endif; ?>
-
+    
     <div class="row g-3 mb-4">
         <?php foreach ($cardsMetricas as $card): ?>
             <div class="col-12 col-md-6 col-xl">
