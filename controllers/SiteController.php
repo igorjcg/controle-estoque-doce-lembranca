@@ -248,4 +248,13 @@ class SiteController extends BaseController
     {
         return $this->render('about');
     }
+
+    public function actionCache()
+    {
+        \Yii::$app->cache->flush();
+        \Yii::$app->db->schema->refresh();
+
+        return $this->redirect(Yii::$app->request->referrer ?: ['site/index']);
+    }
+
 }
