@@ -53,9 +53,10 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     ]);
 
     $menuItems = [];
+    $authItems = [];
 
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $authItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
         $menuItems = [
             ['label' => 'Ingredientes', 'url' => ['/ingrediente/index']],
@@ -63,20 +64,28 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             ['label' => 'Medidas', 'url' => ['/unidade-medida/index']],
             ['label' => 'Movimentações', 'url' => ['/movimentacao-estoque/historico']],
             ['label' => 'Produção', 'url' => ['/producao/index']],
-            '<li class="nav-item">'
-            . Html::beginForm(['/site/logout'])
-            . Html::submitButton(
-                'Sair',
-                ['class' => 'nav-link btn btn-link logout']
-            )
-            . Html::endForm()
-            . '</li>'
+        ];
+
+        $authItems[] = [
+            'label' => 'Olá ' . Yii::$app->user->identity->username,
+            'items' => [
+                [
+                    'label' => 'Sair',
+                    'url' => ['/site/logout'],
+                    'linkOptions' => ['data-method' => 'post'],
+                ],
+            ],
         ];
     }
 
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
-        'items' => $menuItems
+        'items' => $menuItems,
+    ]);
+
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav ms-auto'],
+        'items' => $authItems,
     ]);
 
     NavBar::end();
