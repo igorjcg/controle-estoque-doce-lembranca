@@ -100,18 +100,34 @@ return [
 
 Se estiver usando XAMPP com MySQL local, revise usuário, senha e porta conforme o seu ambiente.
 
-## Executar Migrations
+## Migrations
 
-Com o banco configurado, execute as migrations para criar a estrutura das tabelas:
+Migrations são o controle versionado das mudanças no banco de dados junto com o código do projeto.
+
+No Yii2, as alterações no banco são aplicadas com o comando:
 
 ```bash
 php yii migrate
 ```
 
-Se estiver no Windows e usando o batch do Yii:
+### Padrão adotado no projeto
 
-```bat
-yii.bat migrate
+- As migrations devem ser versionadas junto com o código
+- Cada mudança no banco deve ser feita por uma nova migration
+- O banco deve ser atualizado executando as migrations
+
+### Comandos básicos
+
+Criar uma migration:
+
+```bash
+php yii migrate/create nome_da_migration
+```
+
+Aplicar migrations:
+
+```bash
+php yii migrate
 ```
 
 ## Executar o Projeto
