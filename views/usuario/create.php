@@ -2,6 +2,7 @@
 
 /** @var yii\web\View $this */
 /** @var app\models\User $model */
+/** @var string $token */
 
 use yii\helpers\Html;
 
@@ -15,5 +16,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'token' => $token,
     ]) ?>
 </div>

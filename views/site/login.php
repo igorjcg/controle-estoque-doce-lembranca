@@ -40,10 +40,6 @@ $this->title = 'Login';
                 <?= Html::submitButton('Entrar', ['class' => 'btn btn-primary']) ?>
             </div>
 
-            <div class="text-center mt-3">
-                <?= Html::a('Criar usuário', ['/usuario/create']) ?>
-            </div>
-
             <?php ActiveForm::end(); ?>
         </div>
     </div>

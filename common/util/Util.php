@@ -6,6 +6,16 @@ use yii\db\Exception;
 
 class Util
 {
+    public static function gerarTokenConvite(): string
+    {
+        return bin2hex(random_bytes(32));
+    }
+
+    public static function gerarExpiracaoConvite(int $horas = 48): int
+    {
+        return time() + ($horas * 3600);
+    }
+
     public static function formatDecimalTrimmed(
         float $valor,
         int $casasDecimais = 3,

@@ -2,6 +2,7 @@
 
 /** @var yii\web\View $this */
 /** @var app\models\User $model */
+/** @var string $token */
 
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
@@ -9,7 +10,9 @@ use yii\bootstrap5\Html;
 ?>
 
 <div class="user-form">
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'action' => ['create', 'token' => $token],
+    ]); ?>
 
     <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
 

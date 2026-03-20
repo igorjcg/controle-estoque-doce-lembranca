@@ -7,8 +7,10 @@ use app\assets\AppAsset;
 use app\widgets\Alert;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
+use yii\bootstrap5\Modal;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 
@@ -64,6 +66,14 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             ['label' => 'Medidas', 'url' => ['/unidade-medida/index']],
             ['label' => 'Movimentações', 'url' => ['/movimentacao-estoque/historico']],
             ['label' => 'Produção', 'url' => ['/producao/index']],
+            [
+                'label' => 'Cadastrar usuário',
+                'url' => '#',
+                'linkOptions' => [
+                    'id' => 'gerar-convite-usuario',
+                    'data-url' => Url::to(['/usuario/gerar-convite']),
+                ],
+            ],
         ];
 
         $authItems[] = [
@@ -92,6 +102,87 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     ?>
 </header>
 
+<?php if (!Yii::$app->user->isGuest): ?>
+    <?php Modal::begin([
+        'id' => 'convite-usuario-modal',
+        'title' => 'Link para cadastro de usuário',
+    ]); ?>
+    <p>Copie o link abaixo (Ctrl+C) e envie para a pessoa que você deseja cadastrar no sistema.</p>
+    <div class="input-group">
+        <input type="text" class="form-control" id="convite-usuario-link" readonly>
+        <button type="button" class="btn btn-outline-primary" id="copiar-convite-usuario">Copiar link</button>
+    </div>
+    <?php Modal::end(); ?>
+
+    <?php
+    $conviteJs = <<<'JS'
+const botaoGerarConvite = document.getElementById('gerar-convite-usuario');
+const modalConvite = document.getElementById('convite-usuario-modal');
+const campoConvite = document.getElementById('convite-usuario-link');
+const botaoCopiarConvite = document.getElementById('copiar-convite-usuario');
+
+if (botaoGerarConvite && modalConvite && campoConvite && botaoCopiarConvite) {
+    const instanciaModal = bootstrap.Modal.getOrCreateInstance(modalConvite);
+
+    botaoGerarConvite.addEventListener('click', async (event) => {
+        event.preventDefault();
+
+        try {
+            const response = await fetch(botaoGerarConvite.dataset.url, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-Token': yii.getCsrfToken(),
+                },
+            });
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Não foi possível gerar o convite.');
+            }
+
+            campoConvite.value = data.link;
+            instanciaModal.show();
+        } catch (error) {
+            window.alert(error.message);
+        }
+    });
+
+    botaoCopiarConvite.addEventListener('click', async () => {
+        if (!campoConvite.value) {
+            return;
+        }
+
+        campoConvite.focus();
+        campoConvite.select();
+
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(campoConvite.value);
+            } else {
+                const copiou = document.execCommand('copy');
+                if (!copiou) {
+                    throw new Error('Falha ao copiar o link.');
+                }
+            }
+        } catch (error) {
+            const copiou = document.execCommand('copy');
+            if (!copiou) {
+                window.alert('Nao foi possivel copiar o link automaticamente. Use Ctrl+C.');
+            }
+        }
+    });
+
+    modalConvite.addEventListener('shown.bs.modal', () => {
+        campoConvite.focus();
+        campoConvite.select();
+    });
+}
+JS;
+    $this->registerJs($conviteJs);
+    ?>
+<?php endif; ?>
+
 <main id="main" class="flex-shrink-0" role="main">
     <div class="container">
         <?php if (!empty($this->params['breadcrumbs'])): ?>
@@ -115,3 +206,5 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 </body>
 </html>
 <?php $this->endPage() ?>
+
+
