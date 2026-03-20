@@ -90,3 +90,9 @@ web/uploads/*
 ############################
 /config/db-local.php
 /config/db.php
+
+############################
+# Arquivos locais manuais
+############################
+configs.txt
+script.sh
