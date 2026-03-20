@@ -33,8 +33,11 @@ class IngredienteController extends BaseController
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Ingrediente::find()->with('unidadeMedida')->orderBy(['nome' => SORT_ASC]),
+            'query' => Ingrediente::find()->with('unidadeMedida'),
             'pagination' => ['pageSize' => 20],
+            'sort' => [
+                'defaultOrder' => ['nome' => SORT_ASC],
+            ],
         ]);
 
         return $this->render('index', [

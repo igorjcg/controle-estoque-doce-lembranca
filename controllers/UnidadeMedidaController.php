@@ -31,8 +31,11 @@ class UnidadeMedidaController extends BaseController
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => UnidadeMedida::find()->orderBy(['nome' => SORT_ASC]),
+            'query' => UnidadeMedida::find(),
             'pagination' => ['pageSize' => 20],
+            'sort' => [
+                'defaultOrder' => ['nome' => SORT_ASC],
+            ],
         ]);
 
         return $this->render('index', [

@@ -37,8 +37,11 @@ class ProducaoController extends BaseController
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Producao::find()->with(['receita', 'criadoPor'])->orderBy(['created_at' => SORT_DESC, 'id' => SORT_DESC]),
+            'query' => Producao::find()->with(['receita', 'criadoPor']),
             'pagination' => ['pageSize' => 20],
+            'sort' => [
+                'defaultOrder' => ['created_at' => SORT_DESC, 'id' => SORT_DESC],
+            ],
         ]);
 
         return $this->render('index', [

@@ -40,8 +40,11 @@ class ReceitaController extends BaseController
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Receita::find()->orderBy(['nome' => SORT_ASC]),
+            'query' => Receita::find(),
             'pagination' => ['pageSize' => 20],
+            'sort' => [
+                'defaultOrder' => ['nome' => SORT_ASC],
+            ],
         ]);
 
         return $this->render('index', [

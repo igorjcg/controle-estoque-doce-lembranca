@@ -50,9 +50,11 @@ class MovimentacaoEstoqueController extends BaseController
     {
         $dataProvider = new ActiveDataProvider([
             'query' => MovimentacaoEstoque::find()
-                ->with(['ingrediente.unidadeMedida', 'criadoPor'])
-                ->orderBy(['created_at' => SORT_DESC, 'id' => SORT_DESC]),
+                ->with(['ingrediente.unidadeMedida', 'criadoPor']),
             'pagination' => ['pageSize' => 30],
+            'sort' => [
+                'defaultOrder' => ['created_at' => SORT_DESC, 'id' => SORT_DESC],
+            ],
         ]);
 
         return $this->render('historico', [
